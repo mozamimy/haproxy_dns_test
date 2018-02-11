@@ -1,0 +1,4 @@
+FROM nginx:1.13.8-alpine
+
+ARG TEXT
+COPY $TEXT /usr/share/nginx/html/test.txt

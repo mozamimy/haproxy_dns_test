@@ -1,0 +1,88 @@
+version: '3'
+services:
+  # Execute `kill -SIGHUP 1` to reload DNS records
+  dnsmasq:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile.dnsmasq'
+    networks:
+      haproxy_net:
+        ipv4_address: '172.64.64.2'
+    extra_hosts:
+      - 'upstream:172.64.64.3'
+    cap_add:
+      - 'NET_ADMIN'
+
+  nginx1:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile.nginx'
+      args:
+        TEXT: 'egg.txt'
+    networks:
+      haproxy_net:
+        ipv4_address: '172.64.64.3'
+    dns: '172.64.64.2'
+  nginx2:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile.nginx'
+      args:
+        TEXT: 'chick.txt'
+    networks:
+      haproxy_net:
+        ipv4_address: '172.64.64.4'
+    dns: '172.64.64.2'
+
+  haproxy_16:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile.haproxy.1.6'
+    ports:
+      - '8016:80'
+    depends_on:
+      - 'dnsmasq'
+      - 'nginx1'
+      - 'nginx2'
+    networks:
+      haproxy_net:
+        ipv4_address: '172.64.64.5'
+    dns: '172.64.64.2'
+    command: ['haproxy', '-f', '/usr/local/etc/haproxy/haproxy.cfg']
+  haproxy_17:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile.haproxy.1.7'
+    ports:
+      - '8017:80'
+    depends_on:
+      - 'dnsmasq'
+      - 'nginx1'
+      - 'nginx2'
+    networks:
+      haproxy_net:
+        ipv4_address: '172.64.64.6'
+    dns: '172.64.64.2'
+    command: ['haproxy', '-f', '/usr/local/etc/haproxy/haproxy.cfg']
+  haproxy_18:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile.haproxy.1.8'
+    ports:
+      - '8018:80'
+    depends_on:
+      - 'dnsmasq'
+      - 'nginx1'
+      - 'nginx2'
+    networks:
+      haproxy_net:
+        ipv4_address: '172.64.64.7'
+    dns: '172.64.64.2'
+    command: ['haproxy', '-f', '/usr/local/etc/haproxy/haproxy.cfg']
+
+networks:
+  haproxy_net:
+    driver: 'bridge'
+    ipam:
+      config:
+        - subnet: '172.64.64.0/24'

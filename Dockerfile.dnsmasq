@@ -1,0 +1,4 @@
+FROM andyshinn/dnsmasq:2.78
+
+RUN apk update
+RUN apk add vim curl

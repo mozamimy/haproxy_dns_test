@@ -1,0 +1,6 @@
+FROM haproxy:1.7.10
+
+RUN apt-get update && \
+    apt-get install -y ngrep
+
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
