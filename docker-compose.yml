@@ -7,9 +7,9 @@ services:
       dockerfile: 'Dockerfile.dnsmasq'
     networks:
       haproxy_net:
-        ipv4_address: '172.64.64.2'
+        ipv4_address: '172.20.64.2'
     extra_hosts:
-      - 'upstream:172.64.64.3'
+      - 'upstream:172.20.64.3'
     cap_add:
       - 'NET_ADMIN'
 
@@ -21,8 +21,8 @@ services:
         TEXT: 'egg.txt'
     networks:
       haproxy_net:
-        ipv4_address: '172.64.64.3'
-    dns: '172.64.64.2'
+        ipv4_address: '172.20.64.3'
+    dns: '172.20.64.2'
   nginx2:
     build:
       context: '.'
@@ -31,8 +31,8 @@ services:
         TEXT: 'chick.txt'
     networks:
       haproxy_net:
-        ipv4_address: '172.64.64.4'
-    dns: '172.64.64.2'
+        ipv4_address: '172.20.64.4'
+    dns: '172.20.64.2'
 
   haproxy_16:
     build:
@@ -46,8 +46,8 @@ services:
       - 'nginx2'
     networks:
       haproxy_net:
-        ipv4_address: '172.64.64.5'
-    dns: '172.64.64.2'
+        ipv4_address: '172.20.64.5'
+    dns: '172.20.64.2'
     command: ['haproxy', '-f', '/usr/local/etc/haproxy/haproxy.cfg']
   haproxy_17:
     build:
@@ -61,8 +61,8 @@ services:
       - 'nginx2'
     networks:
       haproxy_net:
-        ipv4_address: '172.64.64.6'
-    dns: '172.64.64.2'
+        ipv4_address: '172.20.64.6'
+    dns: '172.20.64.2'
     command: ['haproxy', '-f', '/usr/local/etc/haproxy/haproxy.cfg']
   haproxy_18:
     build:
@@ -76,8 +76,8 @@ services:
       - 'nginx2'
     networks:
       haproxy_net:
-        ipv4_address: '172.64.64.7'
-    dns: '172.64.64.2'
+        ipv4_address: '172.20.64.7'
+    dns: '172.20.64.2'
     command: ['haproxy', '-f', '/usr/local/etc/haproxy/haproxy.cfg']
 
 networks:
@@ -85,4 +85,4 @@ networks:
     driver: 'bridge'
     ipam:
       config:
-        - subnet: '172.64.64.0/24'
+        - subnet: '172.20.64.0/24'
